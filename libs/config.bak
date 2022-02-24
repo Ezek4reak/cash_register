@@ -1,0 +1,44 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Ezekiel
+ * Date: 02-May-18
+ * Time: 10:18 AM
+ */
+session_start();
+
+    define('DS', DIRECTORY_SEPARATOR, TRUE);
+    define('ROOT_PATH', DS, TRUE);
+    define('ROOT_URL', 'http://localhost'.DS, TRUE);
+    define('CNTRL_PATH','controllers'.DS, TRUE);
+    define('MODEL_PATH', 'models'.DS, TRUE);
+    define('LIBS_PATH', 'libs'.DS, TRUE);
+    define('CLASS_PATH', 'libs'.DS.'base_classes'.DS, TRUE);
+    define('VIEW_PATH', 'views'.DS, TRUE);
+    define('UPLOAD_PATH', ROOT_PATH.'assets'.DS.'uploads'.DS, TRUE);
+    define('DB_HOST', 'localhost');
+    define('DB_USER', 'root');
+    define('DB_PASS', '');
+    define('DB_NAME', 'accounting');
+    /*
+     * The following paths will be shown in the browser that doesn't understand system's directory separator
+     */
+    define('CSS_PATH', 'http://localhost/assets/css/', TRUE);
+    define('JS_PATH', 'http://localhost/assets/js/', TRUE);
+    define('IMG_PATH', 'http://localhost/assets/img/', TRUE);
+
+
+    spl_autoload_register(function ($class){
+        $control_class = CNTRL_PATH.str_ireplace('Controller','', $class).'.php';
+        $model_class = MODEL_PATH.str_ireplace('Model','', $class).'.php';
+        $base_class = CLASS_PATH.$class.'.php';
+        if(file_exists($control_class)){
+            require_once ($control_class);
+        }elseif (file_exists($model_class)){
+            require_once ($model_class);
+        }elseif (file_exists($base_class)){
+            require_once ($base_class);
+        }else{
+            App::setMsg('Requested "'.$class.'" Class Not Found!','error');
+        }
+    });
